@@ -16,14 +16,22 @@ $phpInfo = [
     'server_info' => $_SERVER['SERVER_SOFTWARE'] ?? 'Unknown',
     'endpoints' => [
         'test' => '/index.php',
-        'init_payment' => '/init_payment.php (coming soon)',
-        'verify_payment' => '/verify_payment.php (coming soon)',
-        'notify' => '/notify.php (coming soon)'
+        'init_payment' => '/init_payment.php',
+        'verify_payment' => '/verify_payment.php',
+        'notify' => '/notify.php (callback from UniCredit)',
+        'success' => '/success.php',
+        'error' => '/error.php'
     ],
     'unicredit_config' => [
         'terminal_id' => '30701804',
+        'merchant_id' => '531293500002',
         'backoffice_url' => 'https://pagamenti.unicredit.it/backoffice',
-        'ready' => false
+        'api_configured' => true,
+        'ready' => true
+    ],
+    'usage' => [
+        'init_payment' => 'POST /init_payment.php with {amount, email, order_id}',
+        'verify_payment' => 'GET /verify_payment.php?payment_id=xxx&order_id=yyy'
     ]
 ];
 

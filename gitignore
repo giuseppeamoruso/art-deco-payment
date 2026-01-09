@@ -1,0 +1,30 @@
+# Credenziali e file sensibili
+config.php
+.env
+*.key
+*.pem
+
+# File di sistema
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Log
+*.log
+logs/
+error.log
+
+# Temporary files
+tmp/
+temp/
+cache/
+
+# Composer (se lo useremo)
+vendor/
+composer.lock

@@ -220,7 +220,9 @@ try {
         'response_first_500_chars' => substr($response, 0, 500),
         'response_saved_to' => '/tmp/unicredit_response.xml',
         'curl_error' => $curlError,
-        'content_type' => $contentType
+        'content_type' => $contentType,
+        'response_is_empty' => empty($response),
+        'response_type' => gettype($response)
     ]);
     
     curl_close($ch);
@@ -231,6 +233,19 @@ try {
             'success' => false,
             'error_code' => 'CURL_ERROR',
             'error_message' => 'Errore connessione: ' . $curlError
+        ]);
+    }
+    
+    // VERIFICA CHE LA RISPOSTA NON SIA VUOTA
+    if (empty($response)) {
+        logMessage('EMPTY RESPONSE FROM UNICREDIT', [
+            'http_code' => $httpCode,
+            'curl_error' => $curlError
+        ]);
+        jsonResponse([
+            'success' => false,
+            'error_code' => 'EMPTY_RESPONSE',
+            'error_message' => 'Risposta vuota dal server UniCredit'
         ]);
     }
 

@@ -259,13 +259,15 @@ try {
         ]);
     }
 
-    // Parse risposta SOAP/XML con namespace
+    // Parse risposta SOAP/XML con DOMDocument (più robusto di SimpleXML)
     libxml_use_internal_errors(true);
-    $xml = simplexml_load_string($response);
     
-    if (!$xml) {
+    $dom = new DOMDocument();
+    $loaded = @$dom->loadXML($response);
+    
+    if (!$loaded) {
         $xmlErrors = libxml_get_errors();
-        logMessage('XML Parse Failed', [
+        logMessage('XML Parse Failed with DOMDocument', [
             'errors' => $xmlErrors,
             'response_length' => strlen($response),
             'response_start' => substr($response, 0, 200)
@@ -277,37 +279,28 @@ try {
         ]);
     }
     
-    logMessage('XML loaded successfully', [
-        'xml_object' => get_class($xml)
-    ]);
+    logMessage('XML loaded successfully with DOMDocument');
     
-    // Naviga nella struttura SOAP con namespace
-    $xml->registerXPathNamespace('soap', 'http://schemas.xmlsoap.org/soap/envelope/');
-    $xml->registerXPathNamespace('ns1', 'http://services.api.web.cg.igfs.apps.netsw.it/');
+    // Usa XPath su DOMDocument
+    $xpath = new DOMXPath($dom);
+    $xpath->registerNamespace('soap', 'http://schemas.xmlsoap.org/soap/envelope/');
+    $xpath->registerNamespace('ns1', 'http://services.api.web.cg.igfs.apps.netsw.it/');
     
-    $responseNodes = $xml->xpath('//ns1:InitResponse/response');
+    // Cerca il nodo response
+    $responseNodes = $xpath->query('//ns1:InitResponse/response');
     
     logMessage('XPath query result', [
-        'found_nodes' => count($responseNodes),
+        'found_nodes' => $responseNodes->length,
         'query' => '//ns1:InitResponse/response'
     ]);
     
-    if (empty($responseNodes)) {
-        logMessage('Response node not found in SOAP - trying alternative paths');
+    if ($responseNodes->length === 0) {
+        logMessage('Response node not found - trying alternative xpath');
+        // Prova senza namespace
+        $responseNodes = $xpath->query('//*[local-name()="response"]');
+        logMessage('Alternative xpath result', ['found' => $responseNodes->length]);
         
-        // Prova percorsi alternativi
-        $alt1 = $xml->xpath('//response');
-        $alt2 = $xml->xpath('//*[local-name()="response"]');
-        
-        logMessage('Alternative XPath attempts', [
-            'xpath_response' => count($alt1),
-            'xpath_local_name' => count($alt2)
-        ]);
-        
-        if (!empty($alt2)) {
-            $responseNodes = $alt2;
-            logMessage('Using local-name xpath');
-        } else {
+        if ($responseNodes->length === 0) {
             jsonResponse([
                 'success' => false,
                 'error_code' => 'INVALID_RESPONSE',
@@ -316,12 +309,39 @@ try {
         }
     }
     
-    $responseNode = $responseNodes[0];
-    $rc = (string)$responseNode->rc;
-    $error = ((string)$responseNode->error === 'true');
-    $errorDesc = (string)$responseNode->errorDesc;
-    $paymentID = (string)$responseNode->paymentID;
-    $redirectURL = (string)$responseNode->redirectURL;
+    $responseNode = $responseNodes->item(0);
+    
+    // Estrai i valori dai child nodes
+    $rc = '';
+    $error = false;
+    $errorDesc = '';
+    $paymentID = '';
+    $redirectURL = '';
+    
+    foreach ($responseNode->childNodes as $child) {
+        if ($child->nodeType === XML_ELEMENT_NODE) {
+            $nodeName = $child->nodeName;
+            $nodeValue = $child->nodeValue;
+            
+            switch ($nodeName) {
+                case 'rc':
+                    $rc = $nodeValue;
+                    break;
+                case 'error':
+                    $error = ($nodeValue === 'true');
+                    break;
+                case 'errorDesc':
+                    $errorDesc = $nodeValue;
+                    break;
+                case 'paymentID':
+                    $paymentID = $nodeValue;
+                    break;
+                case 'redirectURL':
+                    $redirectURL = $nodeValue;
+                    break;
+            }
+        }
+    }
     
     logMessage('=== PARSED RESULT ===', [
         'rc' => $rc,

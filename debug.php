@@ -53,6 +53,63 @@ if (file_exists('/tmp/unicredit_response.xml')) {
         } else {
             echo "<p>Could not parse XML</p>";
         }
+        
+        // TEST PARSING COME IN init_payment.php
+        echo "<h2>🧪 Test Parsing (same as init_payment.php):</h2>";
+        
+        libxml_use_internal_errors(true);
+        $testDom = new DOMDocument();
+        $loaded = @$testDom->loadXML($xml);
+        
+        if (!$loaded) {
+            $xmlErrors = libxml_get_errors();
+            echo "<p style='color:red;'>❌ DOMDocument load failed!</p>";
+            echo "<pre>" . print_r($xmlErrors, true) . "</pre>";
+        } else {
+            echo "<p style='color:green;'>✅ DOMDocument loaded successfully</p>";
+            
+            $xpath = new DOMXPath($testDom);
+            $xpath->registerNamespace('soap', 'http://schemas.xmlsoap.org/soap/envelope/');
+            $xpath->registerNamespace('ns1', 'http://services.api.web.cg.igfs.apps.netsw.it/');
+            
+            $responseNodes = $xpath->query('//ns1:InitResponse/response');
+            
+            echo "<p>XPath query: <code>//ns1:InitResponse/response</code></p>";
+            echo "<p>Found nodes: <strong>" . $responseNodes->length . "</strong></p>";
+            
+            if ($responseNodes->length > 0) {
+                echo "<p style='color:green;'>✅ Response node found!</p>";
+                
+                $responseNode = $responseNodes->item(0);
+                
+                echo "<h3>Extracted Values:</h3>";
+                echo "<table border='1' cellpadding='5'>";
+                
+                foreach ($responseNode->childNodes as $child) {
+                    if ($child->nodeType === XML_ELEMENT_NODE) {
+                        echo "<tr>";
+                        echo "<td><strong>" . htmlspecialchars($child->nodeName) . "</strong></td>";
+                        echo "<td>" . htmlspecialchars($child->nodeValue) . "</td>";
+                        echo "</tr>";
+                    }
+                }
+                
+                echo "</table>";
+                
+            } else {
+                echo "<p style='color:orange;'>⚠️ No nodes found with namespace xpath, trying alternative...</p>";
+                
+                $altNodes = $xpath->query('//*[local-name()="response"]');
+                echo "<p>Alternative XPath: <code>//*[local-name()=\"response\"]</code></p>";
+                echo "<p>Found nodes: <strong>" . $altNodes->length . "</strong></p>";
+                
+                if ($altNodes->length > 0) {
+                    echo "<p style='color:green;'>✅ Found with alternative xpath!</p>";
+                } else {
+                    echo "<p style='color:red;'>❌ No nodes found even with alternative xpath</p>";
+                }
+            }
+        }
     }
 } else {
     echo "<p>No response file found. Run a test first.</p>";

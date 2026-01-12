@@ -190,11 +190,20 @@ try {
     $contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
     $curlError = curl_error($ch);
 
+    // Salva risposta completa su file per debug
+    file_put_contents('/tmp/unicredit_response.xml', $response);
+    file_put_contents('/tmp/unicredit_response_info.txt', 
+        "HTTP Code: $httpCode\n" .
+        "Content-Type: $contentType\n" .
+        "Length: " . strlen($response) . "\n" .
+        "Curl Error: $curlError\n"
+    );
+
     logMessage('=== UNICREDIT RAW RESPONSE ===', [
         'http_code' => $httpCode,
         'response_length' => strlen($response),
         'response_first_500_chars' => substr($response, 0, 500),
-        'response_full' => $response,
+        'response_saved_to' => '/tmp/unicredit_response.xml',
         'curl_error' => $curlError,
         'content_type' => $contentType
     ]);

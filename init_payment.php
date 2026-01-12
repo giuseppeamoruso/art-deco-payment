@@ -136,10 +136,12 @@ try {
     ]);
 
     // Costruiamo la richiesta XML/SOAP come richiesto da UniCredit
+    // NOTA: Usa i namespace esatti dalla documentazione UniCredit
     $xmlRequest = '<?xml version="1.0" encoding="UTF-8"?>
-<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-<soap:Body>
-<Init>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://services.api.web.cg.igfs.apps.netsw.it/">
+<soapenv:Body>
+<ser:Init>
+<request>
 <apiVersion>' . API_VERSION . '</apiVersion>
 <tid><![CDATA[' . $params['tid'] . ']]></tid>
 <merID></merID>
@@ -147,7 +149,7 @@ try {
 <shopID><![CDATA[' . $params['shopID'] . ']]></shopID>
 <shopUserRef><![CDATA[' . $params['shopUserRef'] . ']]></shopUserRef>
 <trType><![CDATA[' . $params['trType'] . ']]></trType>
-<amount>' . $params['amount'] . '</amount>
+<amount><![CDATA[' . $params['amount'] . ']]></amount>
 <currencyCode><![CDATA[' . $params['currencyCode'] . ']]></currencyCode>
 <langID><![CDATA[' . $params['langID'] . ']]></langID>
 <notifyURL><![CDATA[' . $params['notifyURL'] . ']]></notifyURL>
@@ -159,14 +161,15 @@ try {
 <addInfo4></addInfo4>
 <addInfo5></addInfo5>
 <signature><![CDATA[' . $params['signature'] . ']]></signature>
-</Init>
-</soap:Body>
-</soap:Envelope>';
+</request>
+</ser:Init>
+</soapenv:Body>
+</soapenv:Envelope>';
 
     logMessage('Calling UniCredit Init with SOAP/XML', [
         'url' => UNICREDIT_API_URL,
         'xml_length' => strlen($xmlRequest),
-        'xml_preview' => substr($xmlRequest, 0, 200) . '...'
+        'xml_preview' => substr($xmlRequest, 0, 300) . '...'
     ]);
 
     // Chiamata HTTP POST a UniCredit con XML/SOAP

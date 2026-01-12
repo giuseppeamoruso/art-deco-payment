@@ -135,22 +135,50 @@ try {
         'signature_length' => strlen($signature)
     ]);
 
-    logMessage('Calling UniCredit Init', [
+    // Costruiamo la richiesta XML/SOAP come richiesto da UniCredit
+    $xmlRequest = '<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+<soap:Body>
+<Init>
+<apiVersion>' . API_VERSION . '</apiVersion>
+<tid><![CDATA[' . $params['tid'] . ']]></tid>
+<merID></merID>
+<payInstr></payInstr>
+<shopID><![CDATA[' . $params['shopID'] . ']]></shopID>
+<shopUserRef><![CDATA[' . $params['shopUserRef'] . ']]></shopUserRef>
+<trType><![CDATA[' . $params['trType'] . ']]></trType>
+<amount>' . $params['amount'] . '</amount>
+<currencyCode><![CDATA[' . $params['currencyCode'] . ']]></currencyCode>
+<langID><![CDATA[' . $params['langID'] . ']]></langID>
+<notifyURL><![CDATA[' . $params['notifyURL'] . ']]></notifyURL>
+<errorURL><![CDATA[' . $params['errorURL'] . ']]></errorURL>
+<callbackURL></callbackURL>
+<addInfo1></addInfo1>
+<addInfo2></addInfo2>
+<addInfo3></addInfo3>
+<addInfo4></addInfo4>
+<addInfo5></addInfo5>
+<signature><![CDATA[' . $params['signature'] . ']]></signature>
+</Init>
+</soap:Body>
+</soap:Envelope>';
+
+    logMessage('Calling UniCredit Init with SOAP/XML', [
         'url' => UNICREDIT_API_URL,
-        'params' => array_merge($params, ['signature' => 'HIDDEN'])
+        'xml_length' => strlen($xmlRequest),
+        'xml_preview' => substr($xmlRequest, 0, 200) . '...'
     ]);
 
-    // Chiamata HTTP POST a UniCredit
-    // NOTA: L'API UniCredit potrebbe richiedere un formato diverso
-    // Proviamo prima con POST standard
+    // Chiamata HTTP POST a UniCredit con XML/SOAP
     $ch = curl_init(UNICREDIT_API_URL);
     curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $xmlRequest);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_TIMEOUT, 30);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        'Content-Type: application/x-www-form-urlencoded'
+        'Content-Type: text/xml; charset="utf-8"',
+        'Content-Length: ' . strlen($xmlRequest)
     ]);
     curl_setopt($ch, CURLOPT_VERBOSE, true);
 

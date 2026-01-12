@@ -227,77 +227,83 @@ try {
 
     if ($curlError) {
         logMessage('CURL ERROR', ['error' => $curlError]);
-        throw new Exception('Errore connessione: ' . $curlError);
-    }
-
-    // Parse risposta JSON
-    $result = json_decode($response, true);
-    $jsonError = json_last_error();
-    
-    logMessage('JSON Parse Attempt', [
-        'json_decoded' => $result !== null,
-        'json_error' => $jsonError,
-        'json_error_msg' => json_last_error_msg()
-    ]);
-    
-    if (!$result && $jsonError !== JSON_ERROR_NONE) {
-        // Prova a parsare come XML
-        logMessage('Trying XML parse...');
-        libxml_use_internal_errors(true);
-        $xml = simplexml_load_string($response);
-        
-        if ($xml) {
-            $result = json_decode(json_encode($xml), true);
-            logMessage('XML Parsed Successfully', ['result' => $result]);
-        } else {
-            $xmlErrors = libxml_get_errors();
-            logMessage('XML Parse Failed', ['errors' => $xmlErrors]);
-        }
-    }
-
-    logMessage('=== PARSED RESULT ===', [
-        'result' => $result,
-        'has_paymentID' => isset($result['paymentID']),
-        'has_redirectURL' => isset($result['redirectURL']),
-        'has_rc' => isset($result['rc']),
-        'has_errorDesc' => isset($result['errorDesc'])
-    ]);
-
-    // Verifica successo
-    if (isset($result['paymentID']) && isset($result['redirectURL'])) {
-        // Successo!
-        logMessage('=== PAYMENT INIT SUCCESS ===', [
-            'payment_id' => $result['paymentID'],
-            'redirect_url' => $result['redirectURL']
-        ]);
-        
-        jsonResponse([
-            'success' => true,
-            'payment_id' => $result['paymentID'],
-            'redirect_url' => $result['redirectURL'],
-            'order_id' => $orderId,
-            'amount' => $amount,
-            'currency' => PAYMENT_CURRENCY
-        ]);
-    } else {
-        // Errore da UniCredit
-        $errorCode = $result['rc'] ?? 'UNKNOWN';
-        $errorDesc = $result['errorDesc'] ?? 'Errore sconosciuto';
-        
-        logMessage('=== UNICREDIT ERROR ===', [
-            'error_code' => $errorCode,
-            'error_description' => $errorDesc,
-            'full_result' => $result
-        ]);
-        
         jsonResponse([
             'success' => false,
-            'error' => 'Errore inizializzazione pagamento',
-            'error_code' => $errorCode,
-            'error_description' => $errorDesc,
-            'raw_response' => substr($response, 0, 200) // primi 200 char per debug
-        ], 400);
+            'error_code' => 'CURL_ERROR',
+            'error_message' => 'Errore connessione: ' . $curlError
+        ]);
     }
+
+    // Parse risposta SOAP/XML con namespace
+    libxml_use_internal_errors(true);
+    $xml = simplexml_load_string($response);
+    
+    if (!$xml) {
+        $xmlErrors = libxml_get_errors();
+        logMessage('XML Parse Failed', ['errors' => $xmlErrors]);
+        jsonResponse([
+            'success' => false,
+            'error_code' => 'XML_PARSE_ERROR',
+            'error_message' => 'Errore parsing XML'
+        ]);
+    }
+    
+    // Naviga nella struttura SOAP con namespace
+    $xml->registerXPathNamespace('soap', 'http://schemas.xmlsoap.org/soap/envelope/');
+    $xml->registerXPathNamespace('ns1', 'http://services.api.web.cg.igfs.apps.netsw.it/');
+    
+    $responseNodes = $xml->xpath('//ns1:InitResponse/response');
+    
+    if (empty($responseNodes)) {
+        logMessage('Response node not found in SOAP');
+        jsonResponse([
+            'success' => false,
+            'error_code' => 'INVALID_RESPONSE',
+            'error_message' => 'Struttura risposta non valida'
+        ]);
+    }
+    
+    $responseNode = $responseNodes[0];
+    $rc = (string)$responseNode->rc;
+    $error = ((string)$responseNode->error === 'true');
+    $errorDesc = (string)$responseNode->errorDesc;
+    $paymentID = (string)$responseNode->paymentID;
+    $redirectURL = (string)$responseNode->redirectURL;
+    
+    logMessage('=== PARSED RESULT ===', [
+        'rc' => $rc,
+        'error' => $error,
+        'errorDesc' => $errorDesc,
+        'paymentID' => $paymentID,
+        'redirectURL' => $redirectURL
+    ]);
+    
+    if ($error || $rc !== 'IGFS_000') {
+        logMessage('=== UNICREDIT ERROR ===', [
+            'rc' => $rc,
+            'errorDesc' => $errorDesc
+        ]);
+        jsonResponse([
+            'success' => false,
+            'error_code' => $rc,
+            'error_message' => $errorDesc ?: 'Errore sconosciuto'
+        ]);
+    }
+    
+    // SUCCESS!
+    logMessage('=== PAYMENT INIT SUCCESS ===', [
+        'paymentID' => $paymentID,
+        'redirectURL' => $redirectURL
+    ]);
+    
+    jsonResponse([
+        'success' => true,
+        'payment_id' => $paymentID,
+        'redirect_url' => $redirectURL,
+        'order_id' => $orderId,
+        'amount' => $amount,
+        'currency' => PAYMENT_CURRENCY
+    ]);
 
 } catch (Exception $e) {
     logMessage('Exception in init_payment', [

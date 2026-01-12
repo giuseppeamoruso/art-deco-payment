@@ -14,7 +14,7 @@ define('UNICREDIT_MERCHANT_ID', '531293500002');
 define('UNICREDIT_SHOP_EMAIL', 'ISFEQUIPE@HOTMAIL.IT');
 
 // URL Servizi PagOnline - PRODUZIONE
-define('UNICREDIT_API_URL', 'https://pagamenti.unicredit.it/UNI_CG_SERVICES/services');
+define('UNICREDIT_API_URL', 'https://pagamenti.unicredit.it/UNI_CG_SERVICES/services/PaymentInitGatewayPort');
 define('UNICREDIT_INIT_WSDL', 'https://pagamenti.unicredit.it/UNI_CG_SERVICES/services/PaymentInitGatewayPort?wsdl');
 define('UNICREDIT_TRAN_WSDL', 'https://pagamenti.unicredit.it/UNI_CG_SERVICES/services/PaymentTranGatewayPort?wsdl');
 

@@ -187,8 +187,8 @@ try {
 
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
     $curlError = curl_error($ch);
-    curl_close($ch);
 
     logMessage('=== UNICREDIT RAW RESPONSE ===', [
         'http_code' => $httpCode,
@@ -196,8 +196,10 @@ try {
         'response_first_500_chars' => substr($response, 0, 500),
         'response_full' => $response,
         'curl_error' => $curlError,
-        'content_type' => curl_getinfo($ch, CURLINFO_CONTENT_TYPE)
+        'content_type' => $contentType
     ]);
+    
+    curl_close($ch);
 
     if ($curlError) {
         logMessage('CURL ERROR', ['error' => $curlError]);

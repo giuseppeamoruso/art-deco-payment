@@ -18,6 +18,9 @@ define('UNICREDIT_API_URL', 'https://pagamenti.unicredit.it/UNI_CG_SERVICES/serv
 define('UNICREDIT_INIT_WSDL', 'https://pagamenti.unicredit.it/UNI_CG_SERVICES/services/PaymentInitGatewayPort?wsdl');
 define('UNICREDIT_TRAN_WSDL', 'https://pagamenti.unicredit.it/UNI_CG_SERVICES/services/PaymentTranGatewayPort?wsdl');
 
+// Versione API UniCredit
+define('API_VERSION', '5.5.0.6');
+
 // BackOffice
 define('UNICREDIT_BACKOFFICE_URL', 'https://pagamenti.unicredit.it/backoffice');
 

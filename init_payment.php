@@ -155,6 +155,7 @@ try {
 
     // Costruiamo la richiesta XML/SOAP come richiesto da UniCredit
     // NOTA: Usa i namespace esatti dalla documentazione UniCredit
+    // IMPORTANTE: I campi vuoti vanno OMESSI, non inclusi come tag vuoti
     $xmlRequest = '<?xml version="1.0" encoding="UTF-8"?>
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://services.api.web.cg.igfs.apps.netsw.it/">
 <soapenv:Body>
@@ -162,8 +163,6 @@ try {
 <request>
 <apiVersion>' . API_VERSION . '</apiVersion>
 <tid><![CDATA[' . $params['tid'] . ']]></tid>
-<merID></merID>
-<payInstr></payInstr>
 <shopID><![CDATA[' . $params['shopID'] . ']]></shopID>
 <shopUserRef><![CDATA[' . $params['shopUserRef'] . ']]></shopUserRef>
 <trType><![CDATA[' . $params['trType'] . ']]></trType>
@@ -172,12 +171,6 @@ try {
 <langID><![CDATA[' . $params['langID'] . ']]></langID>
 <notifyURL><![CDATA[' . $params['notifyURL'] . ']]></notifyURL>
 <errorURL><![CDATA[' . $params['errorURL'] . ']]></errorURL>
-<callbackURL></callbackURL>
-<addInfo1></addInfo1>
-<addInfo2></addInfo2>
-<addInfo3></addInfo3>
-<addInfo4></addInfo4>
-<addInfo5></addInfo5>
 <signature><![CDATA[' . $params['signature'] . ']]></signature>
 </request>
 </ser:Init>

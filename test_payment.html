@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Pagamento Art Decò</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+        }
+        h1 {
+            color: #1f2937;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        p {
+            color: #6b7280;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            color: #374151;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        button {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+        .result.success {
+            background: #d1fae5;
+            border: 1px solid #6ee7b7;
+            color: #065f46;
+        }
+        .result.error {
+            background: #fee2e2;
+            border: 1px solid #fca5a5;
+            color: #991b1b;
+        }
+        .result pre {
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(0,0,0,0.05);
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+        .loader {
+            border: 3px solid #f3f4f6;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-left: 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test Pagamento Art Decò</h1>
+        <p>Testa l'integrazione con UniCredit PagOnline</p>
+        
+        <form id="paymentForm">
+            <div class="form-group">
+                <label for="amount">Importo (€)</label>
+                <input type="number" id="amount" name="amount" value="25.00" step="0.01" min="1" max="9999" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email Cliente</label>
+                <input type="email" id="email" name="email" value="test@artdecoparrucchieri.it" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="customer_name">Nome Cliente</label>
+                <input type="text" id="customer_name" name="customer_name" value="Mario Rossi">
+            </div>
+            
+            <div class="form-group">
+                <label for="order_id">ID Ordine</label>
+                <input type="text" id="order_id" name="order_id" readonly>
+            </div>
+            
+            <div class="form-group">
+                <label for="description">Descrizione</label>
+                <input type="text" id="description" name="description" value="Test Pagamento Art Decò">
+            </div>
+            
+            <button type="submit" id="submitBtn">
+                Inizia Pagamento di Prova
+            </button>
+        </form>
+        
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        // Genera ID ordine automatico
+        function generateOrderId() {
+            const timestamp = Date.now();
+            const random = Math.floor(Math.random() * 1000);
+            return `TEST_${timestamp}_${random}`;
+        }
+        
+        document.getElementById('order_id').value = generateOrderId();
+        
+        // Form submit
+        document.getElementById('paymentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const resultDiv = document.getElementById('result');
+            
+            // Disabilita il pulsante e mostra loader
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = 'Elaborazione in corso<span class="loader"></span>';
+            resultDiv.style.display = 'none';
+            
+            try {
+                // Raccogli i dati
+                const formData = new FormData(e.target);
+                const amount = Math.round(parseFloat(formData.get('amount')) * 100); // Converti in centesimi
+                
+                const payload = {
+                    amount: amount,
+                    email: formData.get('email'),
+                    order_id: formData.get('order_id'),
+                    customer_name: formData.get('customer_name'),
+                    description: formData.get('description')
+                };
+                
+                console.log('Payload:', payload);
+                
+                // Chiamata API
+                const response = await fetch('https://art-deco-app-production.up.railway.app/init_payment.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await response.json();
+                console.log('Response:', data);
+                
+                if (data.success && data.redirect_url) {
+                    // Successo! Mostra il link
+                    resultDiv.className = 'result success';
+                    resultDiv.style.display = 'block';
+                    resultDiv.innerHTML = `
+                        <strong>✅ Pagamento inizializzato con successo!</strong>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                        <p style="margin-top: 15px;">
+                            <a href="${data.redirect_url}" target="_blank" style="color: #065f46; font-weight: 600; text-decoration: underline;">
+                                Clicca qui per procedere al pagamento →
+                            </a>
+                        </p>
+                    `;
+                } else {
+                    // Errore
+                    resultDiv.className = 'result error';
+                    resultDiv.style.display = 'block';
+                    resultDiv.innerHTML = `
+                        <strong>❌ Errore nell'inizializzazione</strong>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                resultDiv.className = 'result error';
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = `
+                    <strong>❌ Errore di rete</strong>
+                    <pre>${error.message}</pre>
+                `;
+            } finally {
+                // Riabilita il pulsante
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Inizia Pagamento di Prova';
+                
+                // Genera nuovo order ID per il prossimo test
+                document.getElementById('order_id').value = generateOrderId();
+            }
+        });
+    </script>
+</body>
+</html>

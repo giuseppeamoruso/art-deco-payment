@@ -102,32 +102,50 @@ try {
         'all_params' => $params
     ]);
 
-    // Genera la firma
-    $signatureParams = [
-        'kSig' => UNICREDIT_API_KEY,
-        'tid' => $params['tid'],
-        'shopID' => $params['shopID'],
-        'shopUserRef' => $params['shopUserRef'],
-        'trType' => $params['trType'],
-        'amount' => $params['amount'],
-        'currencyCode' => $params['currencyCode'],
-        'langID' => $params['langID'],
-        'notifyURL' => $params['notifyURL'],
-        'errorURL' => $params['errorURL']
+    // Genera la firma con TUTTI i campi richiesti da UniCredit
+    // Riferimento: IgfsCgInit.php righe 322-348
+    $signatureFields = [
+        API_VERSION,                    // APIVERSION
+        $params['tid'],                 // TID
+        '',                             // MERID (vuoto)
+        '',                             // PAYINSTR (vuoto)
+        $params['shopID'],              // SHOPID
+        $params['shopUserRef'],         // SHOPUSERREF
+        '',                             // SHOPUSERNAME (vuoto)
+        '',                             // SHOPUSERACCOUNT (vuoto)
+        '',                             // SHOPUSERMOBILEPHONE (vuoto)
+        '',                             // SHOPUSERIMEI (vuoto)
+        $params['trType'],              // TRTYPE
+        $params['amount'],              // AMOUNT
+        $params['currencyCode'],        // CURRENCYCODE
+        $params['langID'],              // LANGID
+        $params['notifyURL'],           // NOTIFYURL
+        $params['errorURL'],            // ERRORURL
+        '',                             // CALLBACKURL (vuoto)
+        '',                             // ADDINFO1 (vuoto)
+        '',                             // ADDINFO2 (vuoto)
+        '',                             // ADDINFO3 (vuoto)
+        '',                             // ADDINFO4 (vuoto)
+        '',                             // ADDINFO5 (vuoto)
+        '',                             // PAYINSTRTOKEN (vuoto)
+        ''                              // TOPUPID (vuoto)
     ];
     
-    // Crea stringa per firma
+    // Concatena tutti i campi (SENZA kSig all'inizio per HMAC)
     $signatureString = '';
-    foreach ($signatureParams as $key => $value) {
-        $signatureString .= $value;
+    foreach ($signatureFields as $field) {
+        $signatureString .= $field;
     }
     
     logMessage('Signature String (before hash)', [
         'string_length' => strlen($signatureString),
-        'first_50_chars' => substr($signatureString, 0, 50)
+        'first_100_chars' => substr($signatureString, 0, 100),
+        'field_count' => count($signatureFields)
     ]);
     
-    $signature = hash('sha256', $signatureString);
+    // IMPORTANTE: UniCredit usa HMAC-SHA256 + Base64, NON semplice SHA256!
+    // Riferimento: IgfsUtils.php riga 11
+    $signature = base64_encode(hash_hmac('sha256', $signatureString, UNICREDIT_API_KEY, true));
     $params['signature'] = $signature;
     
     logMessage('Generated Signature', [

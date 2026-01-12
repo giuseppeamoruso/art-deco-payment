@@ -187,8 +187,12 @@ try {
     logMessage('Calling UniCredit Init with SOAP/XML', [
         'url' => UNICREDIT_API_URL,
         'xml_length' => strlen($xmlRequest),
-        'xml_preview' => substr($xmlRequest, 0, 300) . '...'
+        'xml_preview' => substr($xmlRequest, 0, 300) . '...',
+        'xml_full' => $xmlRequest // LOG COMPLETO PER DEBUG
     ]);
+
+    // Salva anche la richiesta su file
+    file_put_contents('/tmp/unicredit_request.xml', $xmlRequest);
 
     // Chiamata HTTP POST a UniCredit con XML/SOAP
     $ch = curl_init(UNICREDIT_API_URL);

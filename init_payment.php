@@ -240,13 +240,21 @@ try {
     
     if (!$xml) {
         $xmlErrors = libxml_get_errors();
-        logMessage('XML Parse Failed', ['errors' => $xmlErrors]);
+        logMessage('XML Parse Failed', [
+            'errors' => $xmlErrors,
+            'response_length' => strlen($response),
+            'response_start' => substr($response, 0, 200)
+        ]);
         jsonResponse([
             'success' => false,
             'error_code' => 'XML_PARSE_ERROR',
-            'error_message' => 'Errore parsing XML'
+            'error_message' => 'Errore parsing XML: ' . ($xmlErrors[0]->message ?? 'Unknown')
         ]);
     }
+    
+    logMessage('XML loaded successfully', [
+        'xml_object' => get_class($xml)
+    ]);
     
     // Naviga nella struttura SOAP con namespace
     $xml->registerXPathNamespace('soap', 'http://schemas.xmlsoap.org/soap/envelope/');
@@ -254,13 +262,33 @@ try {
     
     $responseNodes = $xml->xpath('//ns1:InitResponse/response');
     
+    logMessage('XPath query result', [
+        'found_nodes' => count($responseNodes),
+        'query' => '//ns1:InitResponse/response'
+    ]);
+    
     if (empty($responseNodes)) {
-        logMessage('Response node not found in SOAP');
-        jsonResponse([
-            'success' => false,
-            'error_code' => 'INVALID_RESPONSE',
-            'error_message' => 'Struttura risposta non valida'
+        logMessage('Response node not found in SOAP - trying alternative paths');
+        
+        // Prova percorsi alternativi
+        $alt1 = $xml->xpath('//response');
+        $alt2 = $xml->xpath('//*[local-name()="response"]');
+        
+        logMessage('Alternative XPath attempts', [
+            'xpath_response' => count($alt1),
+            'xpath_local_name' => count($alt2)
         ]);
+        
+        if (!empty($alt2)) {
+            $responseNodes = $alt2;
+            logMessage('Using local-name xpath');
+        } else {
+            jsonResponse([
+                'success' => false,
+                'error_code' => 'INVALID_RESPONSE',
+                'error_message' => 'Struttura risposta non valida'
+            ]);
+        }
     }
     
     $responseNode = $responseNodes[0];

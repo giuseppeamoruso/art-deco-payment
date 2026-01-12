@@ -236,11 +236,21 @@ try {
         ]);
     }
     
+    // WORKAROUND: Leggi dal file salvato invece che da $response
+    // Perché curl_exec a volte non restituisce correttamente il body
+    if (file_exists('/tmp/unicredit_response.xml')) {
+        $response = file_get_contents('/tmp/unicredit_response.xml');
+        logMessage('Reading response from saved file', [
+            'file_length' => strlen($response)
+        ]);
+    }
+    
     // VERIFICA CHE LA RISPOSTA NON SIA VUOTA
     if (empty($response)) {
         logMessage('EMPTY RESPONSE FROM UNICREDIT', [
             'http_code' => $httpCode,
-            'curl_error' => $curlError
+            'curl_error' => $curlError,
+            'file_exists' => file_exists('/tmp/unicredit_response.xml')
         ]);
         jsonResponse([
             'success' => false,

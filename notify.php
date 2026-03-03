@@ -16,7 +16,6 @@ logMessage('=== NOTIFY RAW REQUEST ===', [
     'body'    => file_get_contents('php://input'),
     'headers' => getallheaders()
 ]);
-logMessage('Notify Callback Received', [
 
 // Leggi i parametri
 $paymentID = $_GET['paymentID'] ?? $_POST['paymentID'] ?? null;
@@ -150,3 +149,4 @@ try {
     echo "ERROR";
 
 }
+

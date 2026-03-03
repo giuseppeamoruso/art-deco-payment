@@ -9,12 +9,14 @@
 require_once 'config.php';
 
 // Log della richiesta
-logMessage('Notify Callback Received', [
-    'method' => $_SERVER['REQUEST_METHOD'],
-    'get' => $_GET,
-    'post' => $_POST,
+logMessage('=== NOTIFY RAW REQUEST ===', [
+    'method'  => $_SERVER['REQUEST_METHOD'],
+    'get'     => $_GET,
+    'post'    => $_POST,
+    'body'    => file_get_contents('php://input'),
     'headers' => getallheaders()
 ]);
+logMessage('Notify Callback Received', [
 
 // Leggi i parametri
 $paymentID = $_GET['paymentID'] ?? $_POST['paymentID'] ?? null;
@@ -146,4 +148,5 @@ try {
     
     http_response_code(500);
     echo "ERROR";
+
 }

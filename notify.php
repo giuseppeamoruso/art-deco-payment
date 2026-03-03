@@ -36,8 +36,23 @@ $authCode = $_GET['authCode'] ?? $_POST['authCode'] ?? null;
 $enrStatus = $_GET['enrStatus'] ?? $_POST['enrStatus'] ?? null;
 $authStatus = $_GET['authStatus'] ?? $_POST['authStatus'] ?? null;
 
+// Capisce se e' il browser dell'utente o una chiamata server-to-server
+$isFromBrowser = isset($_SERVER['HTTP_ACCEPT']) && 
+                 strpos($_SERVER['HTTP_ACCEPT'], 'text/html') !== false;
+
 if (!$paymentID || !$shopID) {
-    logMessage('Notify Error: Missing parameters');
+    if ($isFromBrowser) {
+        // Il browser e' arrivato qui senza parametri
+        // Lo mandiamo a success.php che fara' il deep link verso l'app
+        logMessage('Browser senza parametri - redirect a success.php');
+        $orderId = $_GET['order_id'] ?? '';
+        header('Location: ' . SUCCESS_URL . '?order_id=' . urlencode($orderId));
+        exit;
+    }
+    logMessage('Notify Error: Missing parameters', [
+        'received_get'  => $_GET,
+        'received_post' => $_POST,
+    ]);
     http_response_code(400);
     echo "Missing parameters";
     exit;
@@ -145,6 +160,15 @@ try {
     */
 
     // Risposta OK a UniCredit
+    // Se e' il browser, redirecta alla pagina giusta
+    if ($isFromBrowser) {
+        if ($success) {
+            header('Location: ' . SUCCESS_URL . '?order_id=' . urlencode($shopID) . '&payment_id=' . urlencode($paymentID));
+        } else {
+            header('Location: ' . ERROR_URL . '?order_id=' . urlencode($shopID));
+        }
+        exit;
+    }
     http_response_code(200);
     echo "OK";
 
@@ -158,5 +182,6 @@ try {
     echo "ERROR";
 
 }
+
 
 

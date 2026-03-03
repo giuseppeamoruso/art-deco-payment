@@ -1,4 +1,13 @@
 <?php
+// 🔍 DEBUG TOTALE - rimuovere dopo il test
+file_put_contents('/tmp/notify_debug.txt', 
+    date('Y-m-d H:i:s') . "\n" .
+    "METHOD: " . $_SERVER['REQUEST_METHOD'] . "\n" .
+    "GET: " . print_r($_GET, true) . "\n" .
+    "POST: " . print_r($_POST, true) . "\n" .
+    "BODY RAW: " . file_get_contents('php://input') . "\n" .
+    "HEADERS: " . print_r(getallheaders(), true) . "\n"
+);
 /**
  * Art Decò - Notify Callback
  * 
@@ -149,4 +158,5 @@ try {
     echo "ERROR";
 
 }
+
 

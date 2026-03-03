@@ -86,8 +86,9 @@ try {
         'amount' => $amount,
         'currencyCode' => PAYMENT_CURRENCY,
         'langID' => PAYMENT_LANGUAGE,
-        'notifyURL' => NOTIFY_URL,
-        'errorURL' => ERROR_URL . '?order_id=' . urlencode($orderId),
+        'notifyURL'   => NOTIFY_URL,
+        'errorURL'    => ERROR_URL   . '?order_id=' . urlencode($orderId),
+        'successURL'  => SUCCESS_URL . '?order_id=' . urlencode($orderId),
         'description' => $description
     ];
     
@@ -121,6 +122,7 @@ try {
         $params['langID'],              // LANGID
         $params['notifyURL'],           // NOTIFYURL
         $params['errorURL'],            // ERRORURL
+        $params['successURL'], 
         '',                             // CALLBACKURL (vuoto)
         '',                             // ADDINFO1 (vuoto)
         '',                             // ADDINFO2 (vuoto)
@@ -171,6 +173,7 @@ try {
 <langID><![CDATA[' . $params['langID'] . ']]></langID>
 <notifyURL><![CDATA[' . $params['notifyURL'] . ']]></notifyURL>
 <errorURL><![CDATA[' . $params['errorURL'] . ']]></errorURL>
+<successURL><![CDATA[' . $params['successURL'] . ']]></successURL>
 <signature><![CDATA[' . $params['signature'] . ']]></signature>
 </request>
 </ser:Init>
@@ -390,3 +393,4 @@ try {
         'message' => $e->getMessage()
     ], 500);
 }
+

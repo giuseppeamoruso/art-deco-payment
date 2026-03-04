@@ -124,7 +124,7 @@
     .staff-role { font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
     .staff-bio  { font-size: 0.75rem; line-height: 1.7; color: rgba(245,240,232,0.6); }
 
-    footer { background: var(--dark); border-top: 1px solid rgba(201,168,76,0.15); padding: 64px 48px 32px; }
+    footer { border-top: 1px solid rgba(201,168,76,0.15); padding: 64px 48px 32px; }
     .footer-grid { max-width: 1100px; margin: 0 auto 48px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 48px; }
     .footer-logo { height: 60px; width: auto; margin-bottom: 16px; }
     .footer-tagline { font-size: 0.72rem; color: var(--gray); letter-spacing: 0.15em; text-transform: uppercase; line-height: 1.6; }

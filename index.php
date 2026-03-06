@@ -257,7 +257,7 @@
     <div class="footer-col">
       <h4>Orari</h4>
       <div class="hours-row"><span>Mar - Gio</span><span>9:00-13:00, 16:00-20:00</span></div>
-      <div class="hours-row"><span>Ven - Sab</span><span>9:00-13:00, 16:00-19:00</span></div>
+      <div class="hours-row"><span>Ven - Sab</span><span>9:00-19:00</span></div>
       <div class="hours-row closed"><span>Dom e Lun</span><span>Chiuso</span></div>
     </div>
   </div>

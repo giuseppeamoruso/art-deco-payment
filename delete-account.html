@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Elimina Account – Art Decò Parrucchieri</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #b89a5e;
+      --gold-light: #d4b97a;
+      --dark: #1a1a1a;
+      --mid: #2e2e2e;
+      --light: #f5f2ec;
+      --text: #3a3530;
+      --muted: #7a7268;
+    }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      background-color: var(--light);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--dark);
+      padding: 28px 40px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .logo-mark {
+      width: 44px; height: 44px;
+      border: 1.5px solid var(--gold);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .logo-mark span {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      color: var(--gold);
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+    .logo-text {
+      display: flex; flex-direction: column;
+    }
+    .logo-text strong {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      color: #fff;
+      font-weight: 400;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+    .logo-text small {
+      font-size: 10px;
+      color: var(--gold);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      font-weight: 300;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--dark);
+      padding: 60px 40px 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 120%, rgba(184,154,94,0.15) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero-label {
+      display: inline-block;
+      font-size: 10px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+      font-weight: 400;
+    }
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 300;
+      color: #fff;
+      letter-spacing: 2px;
+      line-height: 1.2;
+    }
+    .hero-divider {
+      width: 50px; height: 1px;
+      background: var(--gold);
+      margin: 28px auto;
+      opacity: 0.6;
+    }
+    .hero p {
+      color: #b0aaa0;
+      font-size: 15px;
+      font-weight: 300;
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.8;
+      letter-spacing: 0.3px;
+    }
+
+    /* ── MAIN CARD AREA ── */
+    main {
+      flex: 1;
+      max-width: 720px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 60px 24px 80px;
+    }
+
+    /* ── SECTION CARD ── */
+    .card {
+      background: #fff;
+      border: 1px solid #e5e0d8;
+      border-radius: 2px;
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 24px 28px 20px;
+      border-bottom: 1px solid #f0ebe2;
+    }
+    .card-icon {
+      width: 36px; height: 36px;
+      background: var(--dark);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .card-icon svg { width: 16px; height: 16px; }
+    .card-header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 400;
+      letter-spacing: 1px;
+      color: var(--dark);
+    }
+    .card-body { padding: 24px 28px; }
+
+    /* ── STEPS ── */
+    .steps { display: flex; flex-direction: column; gap: 20px; }
+    .step {
+      display: flex;
+      gap: 18px;
+      align-items: flex-start;
+    }
+    .step-num {
+      width: 28px; height: 28px;
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px;
+      color: var(--gold);
+      font-weight: 500;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .step-content h3 {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--dark);
+      margin-bottom: 4px;
+      letter-spacing: 0.3px;
+    }
+    .step-content p {
+      font-size: 13.5px;
+      color: var(--muted);
+      font-weight: 300;
+      line-height: 1.7;
+    }
+    .step-path {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+    .step-path span {
+      background: var(--light);
+      border: 1px solid #ddd8ce;
+      border-radius: 2px;
+      padding: 3px 10px;
+      font-size: 12px;
+      color: var(--text);
+      font-weight: 400;
+      letter-spacing: 0.5px;
+    }
+    .step-path .arrow {
+      color: var(--gold);
+      font-size: 11px;
+      border: none; background: none;
+    }
+
+    /* ── DATA TABLE ── */
+    .data-table { width: 100%; border-collapse: collapse; }
+    .data-table th {
+      text-align: left;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 400;
+      padding: 0 0 14px;
+      border-bottom: 1px solid #e8e2d8;
+    }
+    .data-table td {
+      padding: 14px 0;
+      border-bottom: 1px solid #f0ebe2;
+      font-size: 13.5px;
+      color: var(--text);
+      font-weight: 300;
+      vertical-align: top;
+    }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table td:first-child { font-weight: 400; width: 40%; color: var(--dark); }
+    .badge {
+      display: inline-block;
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+    .badge-del { background: #fce8e8; color: #c0392b; }
+    .badge-keep { background: #fff3e0; color: #e67e22; }
+
+    /* ── CONTACT CARD ── */
+    .contact-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .contact-row a {
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 400;
+      letter-spacing: 0.3px;
+      transition: color .2s;
+    }
+    .contact-row a:hover { color: var(--gold-light); }
+    .contact-note {
+      font-size: 12.5px;
+      color: var(--muted);
+      font-weight: 300;
+      margin-top: 8px;
+      line-height: 1.7;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark);
+      text-align: center;
+      padding: 24px 40px;
+      font-size: 12px;
+      color: #5a5550;
+      letter-spacing: 1px;
+    }
+    footer span { color: var(--gold); opacity: 0.7; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo-mark"><span>AD</span></div>
+    <div class="logo-text">
+      <strong>Art Decò</strong>
+      <small>Parrucchieri</small>
+    </div>
+  </header>
+
+  <div class="hero">
+    <div class="hero-label">Privacy &amp; Account</div>
+    <h1>Eliminazione Account</h1>
+    <div class="hero-divider"></div>
+    <p>Puoi eliminare il tuo account direttamente dall'app in pochi secondi, oppure contattarci via email per assistenza.</p>
+  </div>
+
+  <main>
+
+    <!-- COME ELIMINARE -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#b89a5e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
+          </svg>
+        </div>
+        <h2>Come eliminare il tuo account</h2>
+      </div>
+      <div class="card-body">
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h3>Apri l'app Art Decò</h3>
+              <p>Accedi con le tue credenziali se non sei già autenticato.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h3>Vai al tuo Profilo</h3>
+              <div class="step-path">
+                <span>Profilo</span>
+                <span class="arrow">›</span>
+                <span>Impostazioni</span>
+                <span class="arrow">›</span>
+                <span>Elimina account</span>
+              </div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h3>Conferma l'eliminazione</h3>
+              <p>Ti verrà chiesta una conferma. Dopo la conferma, l'account e i dati associati verranno eliminati in modo permanente.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DATI ELIMINATI / CONSERVATI -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#b89a5e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
+          </svg>
+        </div>
+        <h2>Dati eliminati e conservati</h2>
+      </div>
+      <div class="card-body">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Tipo di dato</th>
+              <th>Cosa succede</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Nome e cognome</td>
+              <td><span class="badge badge-del">Eliminato</span></td>
+            </tr>
+            <tr>
+              <td>Indirizzo email</td>
+              <td><span class="badge badge-del">Eliminato</span></td>
+            </tr>
+            <tr>
+              <td>Numero di telefono</td>
+              <td><span class="badge badge-del">Eliminato</span></td>
+            </tr>
+            <tr>
+              <td>Appuntamenti futuri</td>
+              <td><span class="badge badge-del">Eliminato</span></td>
+            </tr>
+            <tr>
+              <td>Storico appuntamenti</td>
+              <td><span class="badge badge-keep">Anonimizzato</span> — i dati finanziari vengono anonimizzati per obblighi di legge</td>
+            </tr>
+            <tr>
+              <td>Dati di pagamento</td>
+              <td><span class="badge badge-keep">Conservato</span> — per 10 anni ai sensi della normativa fiscale italiana</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- CONTATTI -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#b89a5e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+          </svg>
+        </div>
+        <h2>Hai bisogno di aiuto?</h2>
+      </div>
+      <div class="card-body">
+        <div class="contact-row">
+          <a href="mailto:info@artdecoparrucchieri.it">info@artdecoparrucchieri.it</a>
+        </div>
+        <p class="contact-note">Se non riesci ad eliminare l'account dall'app, inviaci una email con oggetto <em>"Richiesta eliminazione account"</em>. Elaboreremo la tua richiesta entro 30 giorni.</p>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <span>Art Decò Parrucchieri</span> · Via Pasubio 41, Bari · info@artdecoparrucchieri.it
+  </footer>
+
+</body>
+</html>

@@ -174,14 +174,14 @@
   <div class="app-section">
     <p class="qr-label">Scarica la nostra app</p>
     <div class="qr-wrapper">
-      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAATgAAAE4AQAAAADnBNLHAAACEUlEQVR4nO2a4W7jMAyDPx76/q/M+0HZ8Q7XdcCGWhnsokBaE4hJKJZER+ZL48/XYAd3cAf3RtwDUC4tjDAIq/7JTH8eO/XDUKIJI1sqJWumP4+9OCmRJhtZRDotM/fgsRcnUMknIT/D/fR9fwvOYIwN+KN8LdbXEfcAapvjShgVi8tMdx67cNhTvP98JqY7j53xtwg44w+hS8D+PDbnXyRFMhkExpaYD/I9eOzCWdiqnCGDlCTSZH3dcWIGG4ATgwiUMvAmPN6Pk4FEnuZ2lwJaaw3TncdOXDSUEQJJthN+0tn/XuOspIt1v6ve16Dz/L7CeemAh2UgsEu83etrjHvA2mlYSSVm9r8+8ffJSP9W1lVJ5pGHKxi9cX3dcUuKlaOXPCwslZTHP/0Up+o/IAlXVyunoe8deGzDRTBiJtSVrt/b19cclzwry9I6J2vugXfgsRE3jjpYurgPFvRNeLwdNx7RFMtxoJN0Fzf6+H9Px+x/y7cCrLQivhri/jx21n9ysq7NqKWVb4oXnfrl6ViPiRKGOQIedd8Iw+48tsZfLj0s0xyeCxYLvzuPrf3bsAxm1zu3wPzYuL7uuPS/adfG2QeW5/ZXLmp3Hh1wzgscvjKxPUyFDuvrjsuLG9Y89KhW+Dy/r3A5RPdiwAw3ZmyJ9+DxftxVNk/br7Rb/j31y9Pxz2tCb7vvwR3cwX0f9xctA/JgEe4UiAAAAABJRU5ErkJggg==" alt="QR Code App">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUgAAAFIAQAAAAAab1qeAAACbUlEQVR4nO1a0WokMQyTjvn/X9Y9SHZm7+GYlqMZHwmUbhvBxsaxZTkUHq5fT4EHeZD/DAlVgAqC5H8oW0LvaopFe5EX4j0CFCV/ggiBuu1OsegFSJKw4wg6UlHurN03nHMWkgBEQBQV7/7ct/9/SAGg77t/9OHQ15zz1cgLqPIDUaSrUZKmuHanWLTfn4lCVx/KhYmyNztGp1i0F8nF5wnVFc/V553sT7FoP//M/TbxlJqSmn8GcPjno3W5pvuWF9VEs9AkAGj3OSchV/GJBxmvqryrV5xzAvKCy4/pu+I/hypFmTwdfz5ekqBkzGRKp8zqNauXn2LRfqTcZCLliAlVCMzeic+n6wLctVPo/IniUWGkPPXoS0i7jaBEcNH7ZE8H6QvOOQBJgRFB8CGJoJNAiP4Ui7bXoybu/lOlKHdGNdmfYtF+5EqYUq67KLX8ac/uP+cEZA81qumEqveEVrDqxOezdQFwfymiSJKnHVhS6MmfT1cJyLrLnUxVSmvEc98fI1uSY3kvPgTatd6cYtH2/FliXWt1f5T3/Jpi0f78ydZBKh6V6TEWrR9j0XZ/5o6zClEr9F2PxO3nnIK8PwJZSn1ei5goRYGaYtH2etSDInfqdc2bMqVQTbFouz+bNCkCshbpjDZy9LovIXsaZ90zsw7nUQluQl9wzhlIerko1bSd5dGuTtvPOQJ5f18nO1Sl4vXrkFPfHyOjz4d0prhzMVFLTyc+v4FkTd2BqHaLiZ78+Q1kZkaks6dqEnfmR1+t76V5uhrpdufpvukd5xyA/Hg/HyHE/dDtSRPOvOPp+nhC9+PffpAH+ff1Gxn3ffgyXMiSAAAAAElFTkSuQmCC" alt="QR Code App">
     </div>
     <div class="store-badges">
-      <a href="#" class="badge">
+      <a href="https://apps.apple.com/it/app/art-dec%C3%B2-parrucchieri/id6760341046" target="_blank" class="badge">
         <svg viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
         <div class="badge-text"><small>Scarica su</small><span>App Store</span></div>
       </a>
-      <a href="#" class="badge">
+      <a href="https://play.google.com/store/apps/details?id=com.artdeco.parrucchieri" target="_blank" class="badge">
         <svg viewBox="0 0 24 24"><path d="M3.18 23.76c.3.17.64.22.98.14l.11-.06 10.5-10.5-2.1-2.1zM20.65 9.19l-2.88-1.64-2.36 2.36 2.36 2.36 2.9-1.65c.83-.47.83-1.76-.02-2.43zM2.12.25C1.8.55 1.62 1 1.62 1.6v20.8c0 .6.18 1.05.5 1.35l.07.06L13.13 12.7v-.26L2.19.19z"/></svg>
         <div class="badge-text"><small>Disponibile su</small><span>Google Play</span></div>
       </a>

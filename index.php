@@ -174,8 +174,10 @@
   <div class="app-section">
     <p class="qr-label">Scarica la nostra app</p>
     <div class="qr-wrapper">
-      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUgAAAFIAQAAAAAab1qeAAACbUlEQVR4nO1a0WokMQyTjvn/X9Y9SHZm7+GYlqMZHwmUbhvBxsaxZTkUHq5fT4EHeZD/DAlVgAqC5H8oW0LvaopFe5EX4j0CFCV/ggiBuu1OsegFSJKw4wg6UlHurN03nHMWkgBEQBQV7/7ct/9/SAGg77t/9OHQ15zz1cgLqPIDUaSrUZKmuHanWLTfn4lCVx/KhYmyNztGp1i0F8nF5wnVFc/V553sT7FoP//M/TbxlJqSmn8GcPjno3W5pvuWF9VEs9AkAGj3OSchV/GJBxmvqryrV5xzAvKCy4/pu+I/hypFmTwdfz5ekqBkzGRKp8zqNauXn2LRfqTcZCLliAlVCMzeic+n6wLctVPo/IniUWGkPPXoS0i7jaBEcNH7ZE8H6QvOOQBJgRFB8CGJoJNAiP4Ui7bXoybu/lOlKHdGNdmfYtF+5EqYUq67KLX8ac/uP+cEZA81qumEqveEVrDqxOezdQFwfymiSJKnHVhS6MmfT1cJyLrLnUxVSmvEc98fI1uSY3kvPgTatd6cYtH2/FliXWt1f5T3/Jpi0f78ydZBKh6V6TEWrR9j0XZ/5o6zClEr9F2PxO3nnIK8PwJZSn1ei5goRYGaYtH2etSDInfqdc2bMqVQTbFouz+bNCkCshbpjDZy9LovIXsaZ90zsw7nUQluQl9wzhlIerko1bSd5dGuTtvPOQJ5f18nO1Sl4vXrkFPfHyOjz4d0prhzMVFLTyc+v4FkTd2BqHaLiZ78+Q1kZkaks6dqEnfmR1+t76V5uhrpdufpvukd5xyA/Hg/HyHE/dDtSRPOvOPp+nhC9+PffpAH+ff1Gxn3ffgyXMiSAAAAAElFTkSuQmCC" alt="QR Code App">
-    </div>
+  <a href="https://linktr.ee/artdeco_parrucchieri" target="_blank">
+    <img src="art_deco.png" alt="QR Code App">
+  </a>
+  </div>
     <div class="store-badges">
       <a href="https://apps.apple.com/it/app/art-dec%C3%B2-parrucchieri/id6760341046" target="_blank" class="badge">
         <svg viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>

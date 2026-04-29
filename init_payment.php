@@ -86,7 +86,7 @@ try {
         'amount' => $amount,
         'currencyCode' => PAYMENT_CURRENCY,
         'langID' => PAYMENT_LANGUAGE,
-        'notifyURL'   => NOTIFY_URL,
+        'notifyURL'   => NOTIFY_URL . '?order_id=' . urlencode($orderId),
         'errorURL'    => ERROR_URL   . '?order_id=' . urlencode($orderId),
         'callbackURL' => SUCCESS_URL . '?order_id=' . urlencode($orderId),
         'description' => $description

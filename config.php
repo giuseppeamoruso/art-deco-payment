@@ -29,9 +29,7 @@ define('UNICREDIT_BACKOFFICE_URL', 'https://pagamenti.unicredit.it/backoffice');
 // ============================================
 
 // URL del tuo servizio Railway (AGGIORNARE dopo il deploy)
-define('BASE_URL', getenv('RAILWAY_PUBLIC_DOMAIN') 
-    ? 'https://' . getenv('RAILWAY_PUBLIC_DOMAIN') 
-    : 'https://art-deco-app-production.up.railway.app');
+define('BASE_URL', 'https://art-deco-app-production.up.railway.app');
 
 // URL di callback
 define('NOTIFY_URL', BASE_URL . '/notify.php');

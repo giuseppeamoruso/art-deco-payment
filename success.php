@@ -130,8 +130,8 @@
         <?php
         require_once 'config.php';
         
-        $orderId = $_GET['order_id'] ?? 'N/A';
-        $paymentId = $_GET['payment_id'] ?? null;
+        $orderId = $_GET['order_id'] ?? $_GET['shopID'] ?? 'N/A';
+        $paymentId = $_GET['payment_id'] ?? $_GET['paymentID'] ?? null;
         $tranId = $_GET['tran_id'] ?? 'N/A';
         $amount = $_GET['amount'] ?? null;
         

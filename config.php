@@ -94,7 +94,7 @@ function logMessage($message, $data = null) {
     error_log($logEntry, 3, __DIR__ . '/payment.log');
     
     // Log su error_log di PHP (visibile in Railway)
-    error_log($message);
+    error_log($message . ($data ? ' | ' . json_encode($data) : ''));
 }
 
 /**

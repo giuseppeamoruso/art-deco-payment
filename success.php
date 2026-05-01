@@ -161,20 +161,26 @@
         </div>
         <?php endif; ?>
         
-        <a href="<?= APP_DEEP_LINK_SUCCESS ?>?order_id=<?= urlencode($orderId) ?>" class="btn">
+        <?php
+        // Costruisce l'URL del deep link con order_id E payment_id
+        $deepLinkUrl = APP_DEEP_LINK_SUCCESS . '?order_id=' . urlencode($orderId);
+        if ($paymentId) {
+            $deepLinkUrl .= '&payment_id=' . urlencode($paymentId);
+        }
+        ?>
+        <a href="<?= $deepLinkUrl ?>" class="btn">
             Torna all'App
         </a>
-        
+
         <p style="margin-top: 20px; font-size: 12px;">
             Se il pulsante non funziona, apri manualmente l'app Art Decò
         </p>
     </div>
 
     <script>
-        // Auto-redirect all'app dopo 3 secondi
+        // Auto-redirect all'app dopo 3 secondi (con payment_id)
         setTimeout(function() {
-            const orderId = '<?= htmlspecialchars($orderId) ?>';
-            window.location.href = '<?= APP_DEEP_LINK_SUCCESS ?>?order_id=' + encodeURIComponent(orderId);
+            window.location.href = '<?= addslashes($deepLinkUrl) ?>';
         }, 3000);
     </script>
 </body>

@@ -148,68 +148,31 @@ try {
     $appointmentId = (count($orderParts) >= 2) ? intval($orderParts[1]) : null;
 
     if ($appointmentId) {
+        // Il record PAGAMENTI viene creato dall'app in "in_attesa" appena
+        // l'appuntamento viene confermato. Qui facciamo solo UPDATE.
         $nuovoStato = $success ? 'completato' : 'failed';
+        $updateData = ['stato' => $nuovoStato];
+        if ($success && $paymentID) {
+            $updateData['unicredit_payment_id'] = $paymentID;
+        }
 
-        // 1) Controlla se esiste già un record in PAGAMENTI
-        $checkUrl = $supabaseBaseUrl . '/PAGAMENTI?appuntamento_id=eq.' . $appointmentId . '&select=id,stato';
-        $ch = curl_init($checkUrl);
+        $updateUrl = $supabaseBaseUrl . '/PAGAMENTI?appuntamento_id=eq.' . $appointmentId;
+        $ch = curl_init($updateUrl);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($updateData));
         curl_setopt($ch, CURLOPT_HTTPHEADER, $supabaseHeaders);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-        $checkBody = curl_exec($ch);
+        $patchResponse = curl_exec($ch);
+        $patchCode     = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
-        $esistenti = json_decode($checkBody, true);
-
-        if (!empty($esistenti)) {
-            // Record già presente → UPDATE stato e unicredit_payment_id
-            $updateData = ['stato' => $nuovoStato];
-            if ($success && $paymentID) {
-                $updateData['unicredit_payment_id'] = $paymentID;
-            }
-            $updateUrl = $supabaseBaseUrl . '/PAGAMENTI?appuntamento_id=eq.' . $appointmentId;
-            $ch = curl_init($updateUrl);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($updateData));
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $supabaseHeaders);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-            curl_exec($ch);
-            curl_close($ch);
-            logMessage('✅ Supabase PAGAMENTI AGGIORNATO', ['appuntamento_id' => $appointmentId, 'stato' => $nuovoStato]);
-
-        } else {
-            // Nessun record → recupera prezzo da APPUNTAMENTI e INSERT
-            $appUrl = $supabaseBaseUrl . '/APPUNTAMENTI?id=eq.' . $appointmentId . '&select=prezzo_totale';
-            $ch = curl_init($appUrl);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $supabaseHeaders);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-            $appBody = curl_exec($ch);
-            curl_close($ch);
-
-            $appData = json_decode($appBody, true);
-            $importo = (!empty($appData) && isset($appData[0]['prezzo_totale']))
-                ? floatval($appData[0]['prezzo_totale'])
-                : 0.0;
-
-            $insertData = [
-                'appuntamento_id'      => $appointmentId,
-                'metodo_pagamento'     => 'unicredit',
-                'stato'                => $nuovoStato,
-                'importo'              => $importo,
-                'unicredit_payment_id' => $paymentID,
-            ];
-            $ch = curl_init($supabaseBaseUrl . '/PAGAMENTI');
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($insertData));
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $supabaseHeaders);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-            curl_exec($ch);
-            curl_close($ch);
-            logMessage('✅ Supabase PAGAMENTI INSERITO', $insertData);
-        }
+        logMessage('✅ Supabase PAGAMENTI UPDATE', [
+            'appuntamento_id' => $appointmentId,
+            'stato'           => $nuovoStato,
+            'http_code'       => $patchCode,
+            'response'        => $patchResponse,
+        ]);
     } else {
         logMessage('⚠️ Impossibile estrarre appointmentId da shopID', ['shopID' => $shopID]);
     }

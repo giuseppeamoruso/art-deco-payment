@@ -45,7 +45,7 @@ define('APP_DEEP_LINK_ERROR', 'artdeco://payment/error');
 // ============================================
 define('PAYMENT_CURRENCY', 'EUR');
 define('PAYMENT_LANGUAGE', 'IT');
-define('PAYMENT_TYPE', 'AUTH'); // AUTH o PURCHASE
+define('PAYMENT_TYPE', 'PURCHASE'); // AUTH = preautorizzazione, PURCHASE = addebito immediato
 
 // ============================================
 // CONFIGURAZIONE DATABASE (opzionale per logging)

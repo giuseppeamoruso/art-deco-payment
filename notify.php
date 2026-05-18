@@ -92,7 +92,6 @@ try {
         'error_desc' => $errorDesc,
         'success' => $success,
         'timestamp' => date('Y-m-d H:i:s'),
-        'raw_data' => $result
     ];
 
     // Salva su file JSON
@@ -120,30 +119,30 @@ try {
     $appointmentId = (count($orderParts) >= 2) ? intval($orderParts[1]) : null;
 
     if ($appointmentId) {
-        // Il record PAGAMENTI viene creato dall'app in "in_attesa" appena
-        // l'appuntamento viene confermato. Qui facciamo solo UPDATE.
-        $nuovoStato = $success ? 'completato' : 'failed';
-        $updateData = ['stato' => $nuovoStato];
-        if ($success && $paymentID) {
-            $updateData['unicredit_payment_id'] = $paymentID;
-        }
+        // Usa la funzione RPC SECURITY DEFINER per bypassare le RLS
+        // Questo garantisce che il PATCH funzioni anche per utenti con supabase_uid impostato
+        $nuovoStato = $success ? 'completato' : 'fallito';
+        $rpcData = [
+            'p_appointment_id'        => $appointmentId,
+            'p_stato'                 => $nuovoStato,
+            'p_unicredit_payment_id'  => ($success && $paymentID) ? $paymentID : null,
+        ];
 
-        $updateUrl = $supabaseBaseUrl . '/PAGAMENTI?appuntamento_id=eq.' . $appointmentId;
-        $ch = curl_init($updateUrl);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($updateData));
+        $ch = curl_init($supabaseBaseUrl . '/rpc/update_payment_unicredit');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($rpcData));
         curl_setopt($ch, CURLOPT_HTTPHEADER, $supabaseHeaders);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-        $patchResponse = curl_exec($ch);
-        $patchCode     = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $rpcResponse = curl_exec($ch);
+        $rpcCode     = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
-        logMessage('✅ Supabase PAGAMENTI UPDATE', [
+        logMessage('✅ Supabase RPC update_payment_unicredit', [
             'appuntamento_id' => $appointmentId,
             'stato'           => $nuovoStato,
-            'http_code'       => $patchCode,
-            'response'        => $patchResponse,
+            'http_code'       => $rpcCode,
+            'response'        => $rpcResponse,
         ]);
     } else {
         logMessage('⚠️ Impossibile estrarre appointmentId da shopID', ['shopID' => $shopID]);

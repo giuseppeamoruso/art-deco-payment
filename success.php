@@ -129,11 +129,43 @@
         
         <?php
         require_once 'config.php';
-        
+
         $orderId = $_GET['order_id'] ?? $_GET['shopID'] ?? 'N/A';
         $paymentId = $_GET['payment_id'] ?? $_GET['paymentID'] ?? null;
         $tranId = $_GET['tran_id'] ?? 'N/A';
         $amount = $_GET['amount'] ?? null;
+
+        // ========================================================
+        // FALLBACK: aggiorna Supabase anche qui nel caso notify.php
+        // non fosse stato chiamato o avesse fallito (es. timeout S2S)
+        // ========================================================
+        if ($orderId !== 'N/A') {
+            $orderParts    = explode('_', $orderId);
+            $appointmentId = (count($orderParts) >= 2) ? intval($orderParts[1]) : null;
+
+            if ($appointmentId) {
+                $supabaseBaseUrl = 'https://fykszvedjcgurryynhha.supabase.co/rest/v1';
+                $supabaseKey     = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ5a3N6dmVkamNndXJyeXluaGhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxODc1ODksImV4cCI6MjA3MTc2MzU4OX0.H_HOV90GkbdZ_0Ue5ml781Qm1q8N6eukcDgXHAqE0VY';
+                $rpcData = [
+                    'p_appointment_id'       => $appointmentId,
+                    'p_stato'                => 'completato',
+                    'p_unicredit_payment_id' => $paymentId ?: null,
+                ];
+                $ch = curl_init($supabaseBaseUrl . '/rpc/update_payment_unicredit');
+                curl_setopt($ch, CURLOPT_POST, true);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($rpcData));
+                curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                    'apikey: ' . $supabaseKey,
+                    'Authorization: Bearer ' . $supabaseKey,
+                    'Content-Type: application/json',
+                    'Prefer: return=minimal',
+                ]);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+                curl_exec($ch);
+                curl_close($ch);
+            }
+        }
         
         if ($orderId && $orderId !== 'N/A'):
         ?>
@@ -178,10 +210,12 @@
     </div>
 
     <script>
-        // Auto-redirect all'app dopo 3 secondi (con payment_id)
+        // Tenta il deep link subito (user gesture non richiesto su redirect da pagamento)
+        window.location.href = '<?= addslashes($deepLinkUrl) ?>';
+        // Fallback dopo 2 secondi nel caso il primo tentativo sia stato bloccato
         setTimeout(function() {
             window.location.href = '<?= addslashes($deepLinkUrl) ?>';
-        }, 3000);
+        }, 2000);
     </script>
 </body>
 </html>
